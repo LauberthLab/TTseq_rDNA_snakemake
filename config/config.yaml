@@ -1,6 +1,6 @@
-samples: "config/samples.tsv"
-scratch_dir:   "/projects/b1042/LauberthLab/TOP1_nucleolus/21161-97-12222025_152419"
-fastq_dir:     "/projects/b1042/LauberthLab/TOP1_nucleolus/21161-97-12222025_152419/FASTQ"
+samples: "config/samples.tsv" # add metadata sheet in config
+scratch_dir:   "main_dir"
+fastq_dir:     "/path/to/fastq"
 trim_dir:      "results/FASTQ_TRIM"
 align_dir:     "results/BAMS"
 bw_dir:        "results/BIGWIGS"
@@ -9,7 +9,6 @@ multiqc_dir:   "results/MULTIQC"
 genome_dir:         "/projects/b1042/LauberthLab/Genome/STAR_hg38+rDNA"
 spikein_genome_dir: "/projects/b1042/LauberthLab/Genome/STAR_index_dm6"
 run_fastq_screen: false
-fastq_screen_conf: "/projects/b1042/LauberthLab/FastQ-Screen-0.15.3/fastq_screen.conf"
 threads: 40
 rand_seed: 42
 binsize: 1
