@@ -1,0 +1,12 @@
+name: ttseq-tools
+channels:
+  - conda-forge  
+  - bioconda
+  - defaults
+dependencies:
+  - fastqc=0.12.1
+  - STAR=2.7.5a
+  - cutadapt=4.2
+  - fastp=0.23.4
+  - samtools=1.6
+  - subread=2.0.3
