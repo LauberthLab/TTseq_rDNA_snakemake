@@ -12,5 +12,6 @@ run_fastq_screen: false
 threads: 40
 rand_seed: 42
 binsize: 1
-normalize_using: "RPKM"
+normalize_using: "None"   # spike-in scaling is done by downsampling; RPKM would undo it
+bamcoverage_extra: "--extendReads --ignoreDuplicates"
 fastq_pattern: "{sample}_R{read}_001.fastq.gz"
