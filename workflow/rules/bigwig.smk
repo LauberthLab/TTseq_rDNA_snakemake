@@ -6,34 +6,24 @@ rule bigwig_individual:
     threads: config["threads"]
     log: "logs/bigwig/{name}.log"
     conda: "../envs/deeptools.yaml"
-    params: bs=config["binsize"], norm=config["normalize_using"]
+    params:
+        bs=config["binsize"],
+        norm=config["normalize_using"],
+        extra=config.get("bamcoverage_extra", ""),
     shell:
         "bamCoverage -b {input.bam} -o {output.bw} -p {threads} "
-        "--normalizeUsing {params.norm} --binSize {params.bs} &> {log}"
-
-rule merge_bams:
-    input:
-        bams=lambda wc: [f"{config['align_dir']}/{s}_sub_sorted.bam"
-                         for s in GROUP_TO_SAMPLES[wc.group]],
-    output:
-        bam=f"{config['align_dir']}/{{group}}_merged.bam",
-        bai=f"{config['align_dir']}/{{group}}_merged.bam.bai",
-    threads: config["threads"]
-    log: "logs/merge/{group}.log"
-    conda: "../envs/deeptools.yaml"
-    shell:
-        "samtools merge -f -@ {threads} {output.bam} {input.bams} 2> {log} && "
-        "samtools index -@ {threads} {output.bam}"
+        "--binSize {params.bs} --normalizeUsing {params.norm} "
+        "{params.extra} &> {log}"
 
 rule bigwig_merged:
     input:
-        bam=f"{config['align_dir']}/{{group}}_merged.bam",
-        bai=f"{config['align_dir']}/{{group}}_merged.bam.bai",
+        bws=lambda wc: [f"{config['bw_dir']}/{SAMPLE_TO_NAME[s]}_bs{config['binsize']}.bw"
+                        for s in GROUP_TO_SAMPLES[wc.group]],
     output: bw=f"{config['bw_dir']}/{{group}}_merged_bs{config['binsize']}.bw"
     threads: config["threads"]
     log: "logs/bigwig_merged/{group}.log"
     conda: "../envs/deeptools.yaml"
-    params: bs=config["binsize"], norm=config["normalize_using"]
+    params: bs=config["binsize"]
     shell:
-        "bamCoverage -b {input.bam} -o {output.bw} -p {threads} "
-        "--normalizeUsing {params.norm} --binSize {params.bs} &> {log}"
+        "bigwigAverage -b {input.bws} -o {output.bw} -p {threads} "
+        "--binSize {params.bs} &> {log}"
